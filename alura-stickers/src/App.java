@@ -1,40 +1,35 @@
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
-import java.util.Map;
 
 public class App {
 
     public static void main(String[] args) throws Exception {
 
         // fazer uma conexão HTTP e buscar os top 250 filmes
-        String url = "https://api.mocki.io/v2/549a5d8b/Top250Movies";
-        URI address = URI.create(url);
-        var client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(address).GET().build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-        String body = response.body();
+        String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java/api/NASA-APOD.json";
 
-        // extrair só os dados que interessam (titulo, poster, classificação)
-        var parser = new JsonParse();
-        List<Map<String, String>> listMovies = parser.parse(body);
+        //Cria um cliente HTTP para fazer requisições
+        Http http = new Http();
+        String json = http.getData(url);
+
+        ContentExtractor extractor = new NasaExtractor();
+
+        List<Content> contents = extractor.extractContents(json);
 
         // exibir e manipular os dados 
-        for (Map<String,String> movie : listMovies) {
-            System.out.println(movie.get("title"));
-            String imageUrl = movie.get("image");
-            String title = movie.get("title");
+        StickerGenerator generator = new StickerGenerator();
+        for (int i = 0; i < 3; i++) {
 
-            InputStream inputStream = new URL(imageUrl).openStream();
-            String fileName = title + ".png";
+            Content content = contents.get(i);
 
-            StickerGenerator generator = new StickerGenerator();
+            InputStream inputStream = new URL(content.getImage()).openStream();
+            String fileName = "./images/" + content.getTitle() + ".png";
+
             generator.create(inputStream, fileName);
+
+            System.out.println(content.getTitle());
+            System.out.println();
         }
     }
 }

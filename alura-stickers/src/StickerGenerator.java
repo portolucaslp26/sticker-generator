@@ -12,7 +12,6 @@ public class StickerGenerator {
     void create(InputStream inputStream, String fileName) throws IOException {
 
         // leitura da imagem
-        // InputStream inputStream = new URL("https://imersao-java-apis.s3.amazonaws.com/TopMovies_1.jpg").openStream();
         BufferedImage originalImage = ImageIO.read(inputStream);
 
         // cria a imagem em memoria com transparência e com tamanho novo
@@ -32,6 +31,7 @@ public class StickerGenerator {
 
         // escrever uma frase na nova imagem
         graphics.drawString("Topzera", width / 4, newHeight - 100);
+        
         // escrever a nova imagem em um arquivo
         ImageIO.write(newImage, "png", new File(fileName));
     }
