@@ -7,13 +7,17 @@ public class App {
     public static void main(String[] args) throws Exception {
 
         // fazer uma conexão HTTP e buscar os top 250 filmes
+        
+        // String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java/api/TopMovies.json";
+        // ContentExtractor extractor = new MovieExtractor();
+
         String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java/api/NASA-APOD.json";
+        ContentExtractor extractor = new NasaExtractor();
 
         //Cria um cliente HTTP para fazer requisições
         Http http = new Http();
         String json = http.getData(url);
 
-        ContentExtractor extractor = new NasaExtractor();
 
         List<Content> contents = extractor.extractContents(json);
 
